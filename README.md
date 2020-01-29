@@ -20,10 +20,10 @@ The implementation uses a version of ML with selected OCaml constructions. In th
 
 ## Commands
 1. To compile the parser and interpreter use the command
-`make`
+> `make`
 
 An executable interpreter `mini-ml` is created that can be used to interpret `.ml` files using the limited syntax:
-`./mini-ml file.ml`
+> `./mini-ml file.ml`
 
 2. To compile the parser and interpreter and run the it on the test file `test.ml` use the command
-`make tests
+> `make tests`
