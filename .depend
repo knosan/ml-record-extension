@@ -1,0 +1,28 @@
+HindleyMilner.cmo :
+HindleyMilner.cmx :
+interpret.cmo : \
+    HindleyMilner.cmo
+interpret.cmx : \
+    HindleyMilner.cmx
+lexer.cmo : \
+    parser.cmi
+lexer.cmx : \
+    parser.cmx
+main.cmo : \
+    parser.cmi \
+    lexer.cmo \
+    interpret.cmo
+main.cmx : \
+    parser.cmx \
+    lexer.cmx \
+    interpret.cmx
+parser.cmo : \
+    HindleyMilner.cmo \
+    parser.cmi
+parser.cmx : \
+    HindleyMilner.cmx \
+    parser.cmi
+parser.cmi : \
+    HindleyMilner.cmo
+test.cmo :
+test.cmx :

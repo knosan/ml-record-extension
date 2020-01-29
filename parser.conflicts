@@ -1,0 +1,84 @@
+
+** Conflict (shift/reduce) in state 11.
+** Tokens involved: STRING LEFT_PAREN INT FLOAT
+** The following explanations concentrate on token STRING.
+** This state is reached from file after reading:
+
+term MINUS term 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+term EOF 
+(?)
+
+** In state 11, looking ahead at STRING, reducing production
+** term -> term MINUS term 
+** is permitted because of the following sub-derivation:
+
+term term // lookahead token appears because term can begin with STRING
+term MINUS term . 
+
+** In state 11, looking ahead at STRING, shifting is permitted
+** because of the following sub-derivation:
+
+term MINUS term 
+           term term 
+                . STRING 
+
+** Conflict (shift/reduce) in state 9.
+** Tokens involved: STRING PLUS MINUS LEFT_PAREN INT FLOAT
+** The following explanations concentrate on token STRING.
+** This state is reached from file after reading:
+
+term term 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+term EOF 
+(?)
+
+** In state 9, looking ahead at STRING, reducing production
+** term -> term term 
+** is permitted because of the following sub-derivation:
+
+term term // lookahead token appears because term can begin with STRING
+term term . 
+
+** In state 9, looking ahead at STRING, shifting is permitted
+** because of the following sub-derivation:
+
+term term 
+     term term 
+          . STRING 
+
+** Conflict (shift/reduce) in state 8.
+** Tokens involved: STRING LEFT_PAREN INT FLOAT
+** The following explanations concentrate on token STRING.
+** This state is reached from file after reading:
+
+term PLUS term 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+term EOF 
+(?)
+
+** In state 8, looking ahead at STRING, reducing production
+** term -> term PLUS term 
+** is permitted because of the following sub-derivation:
+
+term term // lookahead token appears because term can begin with STRING
+term PLUS term . 
+
+** In state 8, looking ahead at STRING, shifting is permitted
+** because of the following sub-derivation:
+
+term PLUS term 
+          term term 
+               . STRING 
