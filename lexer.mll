@@ -33,6 +33,8 @@ rule read = parse
   | '"'                   { read_string lexbuf }
   | "let"                 { LET }
   | "in"                  { IN }
+  | "fun"                 { FUN }
+  | "->"                  { ARROW }
   | '+'                   { PLUS }
   | '-'                   { MINUS }
   | '*'                   { TIMES }
