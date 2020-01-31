@@ -1,4 +1,4 @@
-type var = string * int
+type var = string
 
 type id = string
 
@@ -48,18 +48,17 @@ let unlink  x = match !x with Link a -> a    | _ -> assert false
 
 exception Type_error
 
-(* Next variable index for fresh type variables and new variables declared in the environment.  *)
-let next_i =
-  let n = ref (-1) in
-  fun () -> incr n; !n
-
-(* New variable indexed by next available index. *)
-(* let new_var id =
-  Var (id, next_i ()) *)
-
 (** Fresh type variable. *)
 let fresh =
-  fun () -> EVar (ref (Unbd (next_i ())))
+  let n = ref (-1) in
+  fun () -> incr n; EVar (ref (Unbd !n))
+
+type ffi = {
+  	ftype  : ty;
+  	name   : string;
+  	arity  : int;
+  	eval   : term array -> term
+  }
 
 let rec string_of_ty = function
   | EVar x when is_link x -> string_of_ty (unlink x)
@@ -76,10 +75,10 @@ let rec string_of_ty = function
 
 
 let rec string_of_term = function
-  | Var (id, x) -> Printf.sprintf "%s" id
+  | Var x -> Printf.sprintf "%s" x
   | App (t, u) -> Printf.sprintf "(%s %s)" (string_of_term t) (string_of_term u)
-  | Abs ((id, x), t) -> Printf.sprintf "(fun %s -> %s)" id (string_of_term t)
-  | Let ((id, x), t, u) -> Printf.sprintf "(let %s = %s in %s)" id (string_of_term t) (string_of_term u)
+  | Abs (x, t) -> Printf.sprintf "(fun %s -> %s)" x (string_of_term t)
+  | Let (x, t, u) -> Printf.sprintf "(let %s = %s in %s)" x (string_of_term t) (string_of_term u)
   | Int n -> string_of_int n
   | Float x -> string_of_float x
   | Unit -> "()"
@@ -138,7 +137,6 @@ let rec subtype a b =
   | TUnit, TUnit -> ()
   | TInt, TInt -> ()
   | TFloat, TFloat -> ()
-  | TFloat, TInt -> ()
   | TRecord (l1, a1, b1), TRecord (l2, a2, b2) when l1 = l2 ->
       (
       match a1, a2 with
@@ -179,8 +177,8 @@ let rec gen env = function
 
 (** Infer type. *)
 let rec infer env = function
-  | Var (id, x) -> (try inst (List.assoc x env) with Not_found -> raise Type_error)
-  | Abs ((id, x), t) ->
+  | Var x -> (try inst (List.assoc x env) with Not_found -> raise Type_error)
+  | Abs (x, t) ->
     let a = fresh () in
     let b = infer ((x,a)::env) t in
     Arr (a, b)
@@ -190,7 +188,7 @@ let rec infer env = function
     let c = infer env t in
     subtype (Arr (a,b)) c;
     b
-  | Let ((id, x), t, u) ->
+  | Let (x, t, u) ->
     let a = infer env t in
     infer ((x, gen env a)::env) u
   | Unit -> TUnit
