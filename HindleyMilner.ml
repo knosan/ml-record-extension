@@ -53,6 +53,7 @@ let fresh =
   let n = ref (-1) in
   fun () -> incr n; EVar (ref (Unbd !n))
 
+
 type ffi = {
   	ftype  : ty;
   	name   : string;
@@ -69,9 +70,9 @@ let rec string_of_ty = function
   | TInt -> "int"
   | TFloat -> "float"
   | TString -> "string"
-  | TRecord (l, Yes a, b) -> Printf.sprintf "{%s : %s, %s}" l (string_of_ty a) (string_of_ty b)
-  | TRecord (l, Maybe a, b) -> Printf.sprintf "{?%s : %s, %s}" l (string_of_ty a) (string_of_ty b)
-  | TRecord (l, No, b) -> Printf.sprintf "{%s : Abs, %s}" l (string_of_ty b)
+  | TRecord (l, Yes a, b) -> Printf.sprintf "{%s : %s; %s}" l (string_of_ty a) (string_of_ty b)
+  | TRecord (l, Maybe a, b) -> Printf.sprintf "{?%s : %s; %s}" l (string_of_ty a) (string_of_ty b)
+  | TRecord (l, No, b) -> Printf.sprintf "{%s : Abs; %s}" l (string_of_ty b)
 
 
 let rec string_of_term = function
@@ -85,10 +86,10 @@ let rec string_of_term = function
   | AddInt (m, n) -> Printf.sprintf "%s + %s" (string_of_term m) (string_of_term n)
   | SubInt (m, n) -> Printf.sprintf "%s - %s" (string_of_term m) (string_of_term n)
   | String s -> Printf.sprintf "\"%s\"" s
-  | Record (l, t, u) -> Printf.sprintf "{%s = %s, %s}" l (string_of_term t) (string_of_term u)
+  | Record (l, t, u) -> Printf.sprintf "{%s = %s; %s}" l (string_of_term t) (string_of_term u)
   | Proj (l, t) -> Printf.sprintf "proj_%s %s" l (string_of_term t)
-  | Extend (l, t, v) -> Printf.sprintf "extend_%s %s with %s" l (string_of_term t) (string_of_term v)
-  | Default (l, t, v) -> Printf.sprintf "default_%s %s with %s" l (string_of_term t) (string_of_term v)
+  | Extend (l, v, t) -> Printf.sprintf "extend %s with {%s = %s}" (string_of_term t) l (string_of_term v)
+  | Default (l, v, t) -> Printf.sprintf "default %s with {%s = %s}" (string_of_term t) l (string_of_term v)
 
 
 (** Instantiate a type. *)
@@ -215,13 +216,13 @@ let rec infer env = function
     let b = fresh () in
     subtype r (TRecord (l, Yes a, b));
     a
-  | Extend (l, t, v) ->
+  | Extend (l, v, t) ->
     let r = infer env t in
     let a = infer env v in
     let b = fresh () in
     subtype r (TRecord (l, No, b));
     TRecord (l, Yes a, r)
-  | Default (l, t, v) ->
+  | Default (l, v, t) ->
     let r = infer env t in
     let a = infer env v in
     let b = fresh () in
