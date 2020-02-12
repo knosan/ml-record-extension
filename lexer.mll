@@ -35,6 +35,9 @@ rule read = parse
   | "in"                  { IN }
   | "fun"                 { FUN }
   | "->"                  { ARROW }
+  | "proj"                { PROJ }
+  | "extend"              { EXTEND }
+  | "default"             { DEFAULT }
   | '+'                   { PLUS }
   | '-'                   { MINUS }
   | '*'                   { TIMES }
@@ -47,7 +50,9 @@ rule read = parse
   | ']'                   { RIGHT_BRACK }
   | '='                   { EQ }
   | ':'                   { COLON }
+  | ';'                   { SEMI_COLON }
   | ','                   { COMMA }
+  | '.'                   { PERIOD }
   | '?'                   { QUESTION_MARK }
   | var as lxm            { LABEL lxm }
   | eof                   { EOF }
