@@ -13,10 +13,10 @@ The implementation uses a version of ML with selected OCaml constructions. In th
 - integer substraction
 - floats
 - strings
-- records (to be added to parser)
-- projection of record fields (to be added to parser)
-- record extension (to be added to parser)
-- default records (to be added to parser)
+- records
+- projection of record fields
+- record extension
+- default records
 
 ## Commands
 1. To compile the parser and interpreter use the command
@@ -26,4 +26,4 @@ An executable interpreter `mini-ml` is created that can be used to interpret `.m
 > `./mini-ml file.ml`
 
 2. To compile the parser and interpreter and run the it on the test file `test.ml` use the command
-> `make tests`
+> `make test`
