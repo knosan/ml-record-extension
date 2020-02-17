@@ -1,17 +1,22 @@
 open HindleyMilner
 
-(* let declare fun_type fun_name fun_arity =
-	let f = ffi {
-    ftype = fun_type;
-    name = fun_name;
+(* let env_ffi = Hashtbl.create 0 *)
 
+(* let declare fun_type fun_name  =
+	let f = {
+    ftype  = fun_type;
+    name 	 = fun_name;
+		arity  = arity fun_type;
+		eval   =
     } in
-	env := (name, ffi); !env *)
+		Hashtbl.add env_ffi name f *)
 
-(* let evaladdint = *)
+let rec arity_from_ftype = function
+	| Arr (t1, t2) -> 1 + (arity t2)
+	| _ -> 0
 
 let add_int = {
-	  	ftype  = Arr(Arr(TInt, TInt), TInt);
+	  	ftype  = Arr(TInt, Arr(TInt, TInt));
 	  	name   = "AddInt";
 	  	arity  = 2;
 	  	eval   = (fun a -> begin match Array.get a 0, Array.get a 1 with
@@ -21,7 +26,7 @@ let add_int = {
 	  }
 
 let sub_int = {
-	  	ftype  = Arr(Arr(TInt, TInt), TInt);
+	  	ftype  = Arr(TInt, Arr(TInt, TInt));
 	  	name   = "SubtInt";
 	  	arity  = 2;
 	  	eval   = (fun a -> begin match Array.get a 0, Array.get a 1 with
@@ -31,7 +36,7 @@ let sub_int = {
 	  }
 
 let mul_int = {
-	  	ftype  = Arr(Arr(TInt, TInt), TInt);
+	  	ftype  = Arr(TInt, Arr(TInt, TInt));
 	  	name   = "MulInt";
 	  	arity  = 2;
 	  	eval   = (fun a -> begin match Array.get a 0, Array.get a 1 with
