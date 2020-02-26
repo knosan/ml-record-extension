@@ -20,7 +20,7 @@ let comment = "(*"("*"*[^'*' ')']|[^'*'])*"*"+")"
 let digit = ['0'-'9']
 let frac = '.' digit*
 let exp = ['e' 'E'] ['-' '+']? digit+
-let float = digit* frac? exp?
+let float = digit+ frac? exp?
 let integer = digit+
 let var = ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_' '\'']*
 
@@ -38,22 +38,15 @@ rule read = parse
   | "proj"                { PROJ }
   | "extend"              { EXTEND }
   | "default"             { DEFAULT }
-  | '+'                   { PLUS }
-  | '-'                   { MINUS }
-  | '*'                   { TIMES }
-  | '/'                   { DIV }
+  (* | '+'                   { PLUS } *)
+  (* | '-'                   { MINUS } *)
   | '('                   { LEFT_PAREN }
   | ')'                   { RIGHT_PAREN }
   | '{'                   { LEFT_BRACE }
   | '}'                   { RIGHT_BRACE }
-  | '['                   { LEFT_BRACK }
-  | ']'                   { RIGHT_BRACK }
   | '='                   { EQ }
-  | ':'                   { COLON }
   | ';'                   { SEMI_COLON }
-  | ','                   { COMMA }
-  | '.'                   { PERIOD }
-  | '?'                   { QUESTION_MARK }
+  (* | '.'                   { DOT } *)
   | var as lxm            { LABEL lxm }
   | eof                   { EOF }
   | _                     { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
