@@ -33,6 +33,6 @@ clean:
 
 .depend depend:$(GENERATED)
 	rm -f .depend
-	ocamldep *.ml *.mli > .depend
+	ocamldep $(filter-out test.ml,$(wildcard *.ml)) *.mli > .depend
 
 include .depend

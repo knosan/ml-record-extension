@@ -2,9 +2,17 @@ open Format
 open Lexing
 open Parser
 
-let usage = "usage: mini-ml [options] file.ml"
+let type_only = ref false
+let print_builtin = ref false
 
-let spec = []
+let options =
+  ["--type-only", Arg.Set type_only,
+     "  stops after typing";
+   "--builtin", Arg.Set print_builtin,
+      "  displays builtin functions";
+   ]
+
+let usage = "usage: mini-ml [options] file.ml"
 
 let file =
   let file = ref None in
@@ -13,8 +21,10 @@ let file =
       raise (Arg.Bad "no .ml extension");
     file := Some s
   in
-  Arg.parse spec set_file usage;
-  match !file with Some f -> f | None -> Arg.usage spec usage; exit 1
+  Arg.parse options set_file usage;
+  match !file with
+    | Some f -> f
+    | None -> if !print_builtin then printf "Builtin functions:\n%s" Functions.string_of_builtin else Arg.usage options usage; exit 1
 
 let report (b,e) =
   let l = b.pos_lnum in
@@ -27,8 +37,10 @@ let () =
   let lb = Lexing.from_channel c in
   try
     let t = Parser.file Lexer.read lb in
+    close_in c;
     Interpret.type_term t;
-    close_in c
+    if !type_only then exit 0;
+    Interpret.eval_term t
   with
     | Lexer.SyntaxError s ->
       	report (lexeme_start_p lb, lexeme_end_p lb);
