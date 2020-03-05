@@ -12,7 +12,7 @@ The implementation uses a version of ML with selected OCaml constructions. In th
 - floats
 - strings
 - records
-- projection of record fields `proj lable record`
+- projection of record fields `proj label record`
 - record extension `extend label value record`
 - default records `default label value record`
 - builtin functions
