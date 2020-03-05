@@ -1,9 +1,15 @@
 HindleyMilner.cmo :
 HindleyMilner.cmx :
-interpret.cmo : \
+functions.cmo : \
     HindleyMilner.cmo
-interpret.cmx : \
+functions.cmx : \
     HindleyMilner.cmx
+interpret.cmo : \
+    HindleyMilner.cmo \
+    functions.cmo
+interpret.cmx : \
+    HindleyMilner.cmx \
+    functions.cmx
 lexer.cmo : \
     parser.cmi
 lexer.cmx : \
@@ -11,11 +17,13 @@ lexer.cmx : \
 main.cmo : \
     parser.cmi \
     lexer.cmo \
-    interpret.cmo
+    interpret.cmo \
+    functions.cmo
 main.cmx : \
     parser.cmx \
     lexer.cmx \
-    interpret.cmx
+    interpret.cmx \
+    functions.cmx
 parser.cmo : \
     HindleyMilner.cmo \
     parser.cmi

@@ -2,4 +2,6 @@
 
 let x = 10
 
-x
+let y = AddInt
+
+y

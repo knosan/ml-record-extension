@@ -15,7 +15,7 @@ let type_term t =
     print_endline ((string_of_term t) ^ " : " ^ (string_of_ty ty))
   with
     |   Type_error ->
-        print_endline ("Error when tyring to infer type of : " ^ (string_of_term t))
+        print_endline ("Error when trying to infer type of : " ^ (string_of_term t))
 
 
 (* EVALUATION *)
@@ -94,4 +94,4 @@ let eval_term t =
     print_endline ((string_of_term t) ^ " evaluates to " ^ (string_of_term v))
   with
     | Type_error -> print_endline ("Evaluation error: Cannot evaluate a term that is not well-typed.")
-    | Evaluation_error -> print_endline ("Evaluation error: error when tyring to evaluate : " ^ (string_of_term t))
+    | Evaluation_error -> print_endline ("Evaluation error: error when trying to evaluate : " ^ (string_of_term t))

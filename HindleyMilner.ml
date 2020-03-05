@@ -25,9 +25,18 @@ type term =
   | Proj of label * term
   | Extend of label * term * term
   | Default of label * term * term
+  | Function of ffi
+
+(* functions *)
+and ffi = {
+  	ftype  : ty;
+  	name   : string;
+  	arity  : int;
+  	eval   : term array -> term
+  }
 
 (** Types. *)
-type ty =
+and ty =
   | EVar of tvar ref (* non-quantified variable *)
   | UVar of int      (* universally quantified variable *)
   | Arr of ty * ty
@@ -54,13 +63,6 @@ let fresh =
   fun () -> incr n; EVar (ref (Unbd !n))
 
 
-type ffi = {
-  	ftype  : ty;
-  	name   : string;
-  	arity  : int;
-  	eval   : term array -> term
-  }
-
 let rec string_of_ty = function
   | EVar x when is_link x -> string_of_ty (unlink x)
   | EVar x -> Printf.sprintf "'%c" (char_of_int (int_of_char 'a' + tname x))
@@ -79,7 +81,7 @@ let rec string_of_term = function
   | Var x -> Printf.sprintf "%s" x
   | App (t, u) -> Printf.sprintf "(%s %s)" (string_of_term t) (string_of_term u)
   | Abs (x, t) -> Printf.sprintf "(fun %s -> %s)" x (string_of_term t)
-  | Let (x, t, u) -> Printf.sprintf "(let %s = %s in %s)" x (string_of_term t) (string_of_term u)
+  | Let (x, t, u) -> Printf.sprintf "(let %s = %s in \n%s)" x (string_of_term t) (string_of_term u)
   | Int n -> string_of_int n
   | Float x -> string_of_float x
   | Unit -> "()"
@@ -90,6 +92,7 @@ let rec string_of_term = function
   | Proj (l, t) -> Printf.sprintf "proj_%s %s" l (string_of_term t)
   | Extend (l, v, t) -> Printf.sprintf "extend %s with {%s = %s}" (string_of_term t) l (string_of_term v)
   | Default (l, v, t) -> Printf.sprintf "default %s with {%s = %s}" (string_of_term t) l (string_of_term v)
+  | Function f -> Printf.sprintf "%s" f.name
 
 
 (** Instantiate a type. *)
@@ -187,6 +190,7 @@ let rec infer env = function
     let a = infer env u in
     let b = fresh () in
     let c = infer env t in
+    print_endline ("applying " ^ (string_of_term t) ^ " to " ^ (string_of_term u));
     subtype (Arr (a,b)) c;
     b
   | Let (x, t, u) ->
@@ -228,3 +232,5 @@ let rec infer env = function
     let b = fresh () in
     subtype r (TRecord (l, Maybe a, b));
     TRecord (l, Yes a, b)
+  | Function f ->
+    f.ftype

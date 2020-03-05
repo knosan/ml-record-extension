@@ -1,4 +1,4 @@
-CMO=HindleyMilner.cmo lexer.cmo parser.cmo interpret.cmo main.cmo
+CMO=HindleyMilner.cmo functions.cmo lexer.cmo parser.cmo interpret.cmo main.cmo
 GENERATED = lexer.ml parser.ml parser.mli
 FLAGS=-annot -g
 
@@ -33,6 +33,7 @@ clean:
 
 .depend depend:$(GENERATED)
 	rm -f .depend
-	ocamldep $(filter-out test.ml,$(wildcard *.ml)) *.mli > .depend
+	ocamldep *.ml *.mli > .depend
+	# ocamldep $(filter-out test.ml,$(wildcard *.ml)) *.mli > .depend
 
 include .depend
