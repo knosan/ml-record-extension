@@ -31,6 +31,7 @@ rule read = parse
   | integer as lxm        { INT (int_of_string lxm) }
   | float as lxm          { FLOAT (float_of_string lxm) }
   | '"'                   { read_string lexbuf }
+  | ";;"                  { SS }
   | "let"                 { LET }
   | "in"                  { IN }
   | "fun"                 { FUN }

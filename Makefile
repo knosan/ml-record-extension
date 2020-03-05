@@ -36,4 +36,8 @@ clean:
 	ocamldep *.ml *.mli > .depend
 	# ocamldep $(filter-out test.ml,$(wildcard *.ml)) *.mli > .depend
 
+explain:
+	menhir --explain parser.mly
+	less parser.conflicts
+
 include .depend

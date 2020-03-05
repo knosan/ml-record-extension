@@ -14,7 +14,7 @@
 /* %token TIMES DIV */
 %token LEFT_PAREN RIGHT_PAREN
 %token LEFT_BRACE RIGHT_BRACE
-%token EQ SEMI_COLON
+%token EQ SEMI_COLON SS
 /* %token DOT */
 %token EOF
 
@@ -44,34 +44,36 @@ file:
 ;
 
 decl:
-  | LET; v = LABEL; EQ; t1 = term; t2 = decl  { Let (v, t1, t2) }
+  | LET; v = LABEL; EQ; t1 = term; SS t2 = decl  { Let (v, t1, t2) }
   | t = final_decl                            { t }
 ;
 
 final_decl:
-  | LET; v = LABEL; EQ; t1 = term; EOF         { Let (v, t1, Unit) }
-  | t = final_term; EOF                        { t }
-;
-
-final_term:
-  | v = LABEL                                   { Var v }
+  | EOF                                        { Unit }
+  | term; EOF                                  { $1 }
 ;
 
 term:
+  | LET; v = LABEL; t1 = term; IN; t2 = term    { Let (v, t1, t2) }
+  | aterm { $1 }
+
+aterm:
+  | FUN; v = LABEL; ARROW; t = term             { Abs (v, t) }
+  | t1 = sterm; t2 = aterm (*%prec prec_app *)     { App (t1, t2) }
+  | sterm { $1 }
+
+sterm:
   | LEFT_PAREN; t = term; RIGHT_PAREN           { t }
   | v = LABEL                                   { Var v }
-  | FUN; v = LABEL; ARROW; t = term             { Abs (v, t) }
   /* | a = application                             { a } */
-  /* | t1 = term; t2 = term (*%prec prec_app *)        { App (t1, t2) } */
-  | LET; v = LABEL; t1 = term; IN; t2 = term    { Let (v, t1, t2) }
   | LEFT_PAREN; RIGHT_PAREN                     { Unit }
   | i = INT                                     { Int i }
   | x = FLOAT                                   { Float x }
   | s = STRING                                  { String s }
   | r = record                                  { r }
-  | PROJ; l = LABEL; t = term                   { Proj (l, t) }
-  | EXTEND; l = LABEL; t1 = term; t2 = term     { Extend (l, t1, t2) }
-  | DEFAULT; l = LABEL; t1 = term; t2 = term    { Default (l, t1, t2) }
+  | PROJ; l = LABEL; t = sterm                   { Proj (l, t) }
+  | EXTEND; l = LABEL; t1 = sterm; t2 = sterm     { Extend (l, t1, t2) }
+  | DEFAULT; l = LABEL; t1 = sterm; t2 = sterm    { Default (l, t1, t2) }
 ;
 
 /* application:
