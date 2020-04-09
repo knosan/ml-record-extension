@@ -24,7 +24,7 @@ let file =
   Arg.parse options set_file usage;
   match !file with
     | Some f -> f
-    | None -> if !print_builtin then printf "Builtin functions:\n%s" Functions.string_of_builtin else Arg.usage options usage; exit 1
+    | None -> if !print_builtin then printf "BUILTIN FUNCTIONS\n%s" Functions.string_of_builtin else Arg.usage options usage; exit 1
 
 let report (b,e) =
   let l = b.pos_lnum in

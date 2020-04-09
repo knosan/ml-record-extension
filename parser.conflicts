@@ -1,0 +1,29 @@
+
+** Conflict (shift/reduce) in state 46.
+** Token involved: RIGHT_PAREN
+** This state is reached from file after reading:
+
+LEFT_PAREN aterm 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+file 
+decl 
+final_decl 
+term EOF 
+aterm 
+(?)
+
+** In state 46, looking ahead at RIGHT_PAREN, shifting is permitted
+** because of the following sub-derivation:
+
+sterm aterm 
+LEFT_PAREN aterm . RIGHT_PAREN 
+
+** In state 46, looking ahead at RIGHT_PAREN, reducing production
+** term -> aterm 
+** is permitted because of the following sub-derivation:
+
+LEFT_PAREN term RIGHT_PAREN // lookahead token appears
+           aterm . 

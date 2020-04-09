@@ -1,7 +1,7 @@
 (* Test file parsed and interpreted at command `make test`.  *)
 
-let x = 10
+let x = neg_int 2
 ;;
-let y = AddInt
+let y = add_int x
 ;;
-y
+y 3

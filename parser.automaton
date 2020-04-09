@@ -1,0 +1,743 @@
+State 0:
+file' -> . file [ # ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 50
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On EOF shift to state 55
+-- On DEFAULT shift to state 22
+-- On term shift to state 56
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On final_decl shift to state 58
+-- On file shift to state 60
+-- On decl shift to state 61
+-- On aterm shift to state 32
+
+State 1:
+sterm -> STRING . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> STRING 
+-- On SS reduce production sterm -> STRING 
+-- On SEMI_COLON reduce production sterm -> STRING 
+-- On RIGHT_PAREN reduce production sterm -> STRING 
+-- On RIGHT_BRACE reduce production sterm -> STRING 
+-- On PROJ reduce production sterm -> STRING 
+-- On LEFT_PAREN reduce production sterm -> STRING 
+-- On LEFT_BRACE reduce production sterm -> STRING 
+-- On LABEL reduce production sterm -> STRING 
+-- On INT reduce production sterm -> STRING 
+-- On IN reduce production sterm -> STRING 
+-- On FUN reduce production sterm -> STRING 
+-- On FLOAT reduce production sterm -> STRING 
+-- On EXTEND reduce production sterm -> STRING 
+-- On EOF reduce production sterm -> STRING 
+-- On DEFAULT reduce production sterm -> STRING 
+
+State 2:
+sterm -> PROJ . LABEL sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On LABEL shift to state 3
+
+State 3:
+sterm -> PROJ LABEL . sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 4
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 49
+-- On record shift to state 26
+
+State 4:
+sterm -> LEFT_PAREN . aterm RIGHT_PAREN [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+sterm -> LEFT_PAREN . RIGHT_PAREN [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On RIGHT_PAREN shift to state 5
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 48
+
+State 5:
+sterm -> LEFT_PAREN RIGHT_PAREN . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On SS reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On SEMI_COLON reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On RIGHT_PAREN reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On RIGHT_BRACE reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On PROJ reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On LEFT_PAREN reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On LEFT_BRACE reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On LABEL reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On INT reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On IN reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On FUN reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On FLOAT reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On EXTEND reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On EOF reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+-- On DEFAULT reduce production sterm -> LEFT_PAREN RIGHT_PAREN 
+
+State 6:
+aterm -> LEFT_PAREN . term RIGHT_PAREN [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+sterm -> LEFT_PAREN . aterm RIGHT_PAREN [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+sterm -> LEFT_PAREN . RIGHT_PAREN [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On RIGHT_PAREN shift to state 5
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 44
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 46
+
+State 7:
+term -> LET . LABEL EQ term IN term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On LABEL shift to state 8
+
+State 8:
+term -> LET LABEL . EQ term IN term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On EQ shift to state 9
+
+State 9:
+term -> LET LABEL EQ . term IN term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 41
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 32
+
+State 10:
+record -> LEFT_BRACE . fields [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On RIGHT_BRACE shift to state 11
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 12
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 35
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On fields shift to state 40
+-- On aterm shift to state 32
+
+State 11:
+fields -> RIGHT_BRACE . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production fields -> RIGHT_BRACE 
+-- On SS reduce production fields -> RIGHT_BRACE 
+-- On SEMI_COLON reduce production fields -> RIGHT_BRACE 
+-- On RIGHT_PAREN reduce production fields -> RIGHT_BRACE 
+-- On RIGHT_BRACE reduce production fields -> RIGHT_BRACE 
+-- On PROJ reduce production fields -> RIGHT_BRACE 
+-- On LEFT_PAREN reduce production fields -> RIGHT_BRACE 
+-- On LEFT_BRACE reduce production fields -> RIGHT_BRACE 
+-- On LABEL reduce production fields -> RIGHT_BRACE 
+-- On INT reduce production fields -> RIGHT_BRACE 
+-- On IN reduce production fields -> RIGHT_BRACE 
+-- On FUN reduce production fields -> RIGHT_BRACE 
+-- On FLOAT reduce production fields -> RIGHT_BRACE 
+-- On EXTEND reduce production fields -> RIGHT_BRACE 
+-- On EOF reduce production fields -> RIGHT_BRACE 
+-- On DEFAULT reduce production fields -> RIGHT_BRACE 
+
+State 12:
+fields -> LABEL . EQ term SEMI_COLON fields [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+sterm -> LABEL . [ STRING SEMI_COLON RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT FUN FLOAT EXTEND DEFAULT ]
+-- On EQ shift to state 13
+-- On STRING reduce production sterm -> LABEL 
+-- On SEMI_COLON reduce production sterm -> LABEL 
+-- On RIGHT_BRACE reduce production sterm -> LABEL 
+-- On PROJ reduce production sterm -> LABEL 
+-- On LEFT_PAREN reduce production sterm -> LABEL 
+-- On LEFT_BRACE reduce production sterm -> LABEL 
+-- On LABEL reduce production sterm -> LABEL 
+-- On INT reduce production sterm -> LABEL 
+-- On FUN reduce production sterm -> LABEL 
+-- On FLOAT reduce production sterm -> LABEL 
+-- On EXTEND reduce production sterm -> LABEL 
+-- On DEFAULT reduce production sterm -> LABEL 
+
+State 13:
+fields -> LABEL EQ . term SEMI_COLON fields [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 33
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 32
+
+State 14:
+sterm -> LABEL . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> LABEL 
+-- On SS reduce production sterm -> LABEL 
+-- On SEMI_COLON reduce production sterm -> LABEL 
+-- On RIGHT_PAREN reduce production sterm -> LABEL 
+-- On RIGHT_BRACE reduce production sterm -> LABEL 
+-- On PROJ reduce production sterm -> LABEL 
+-- On LEFT_PAREN reduce production sterm -> LABEL 
+-- On LEFT_BRACE reduce production sterm -> LABEL 
+-- On LABEL reduce production sterm -> LABEL 
+-- On INT reduce production sterm -> LABEL 
+-- On IN reduce production sterm -> LABEL 
+-- On FUN reduce production sterm -> LABEL 
+-- On FLOAT reduce production sterm -> LABEL 
+-- On EXTEND reduce production sterm -> LABEL 
+-- On EOF reduce production sterm -> LABEL 
+-- On DEFAULT reduce production sterm -> LABEL 
+
+State 15:
+sterm -> INT . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> INT 
+-- On SS reduce production sterm -> INT 
+-- On SEMI_COLON reduce production sterm -> INT 
+-- On RIGHT_PAREN reduce production sterm -> INT 
+-- On RIGHT_BRACE reduce production sterm -> INT 
+-- On PROJ reduce production sterm -> INT 
+-- On LEFT_PAREN reduce production sterm -> INT 
+-- On LEFT_BRACE reduce production sterm -> INT 
+-- On LABEL reduce production sterm -> INT 
+-- On INT reduce production sterm -> INT 
+-- On IN reduce production sterm -> INT 
+-- On FUN reduce production sterm -> INT 
+-- On FLOAT reduce production sterm -> INT 
+-- On EXTEND reduce production sterm -> INT 
+-- On EOF reduce production sterm -> INT 
+-- On DEFAULT reduce production sterm -> INT 
+
+State 16:
+aterm -> FUN . LABEL ARROW term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On LABEL shift to state 17
+
+State 17:
+aterm -> FUN LABEL . ARROW term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On ARROW shift to state 18
+
+State 18:
+aterm -> FUN LABEL ARROW . term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 29
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 32
+
+State 19:
+sterm -> FLOAT . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> FLOAT 
+-- On SS reduce production sterm -> FLOAT 
+-- On SEMI_COLON reduce production sterm -> FLOAT 
+-- On RIGHT_PAREN reduce production sterm -> FLOAT 
+-- On RIGHT_BRACE reduce production sterm -> FLOAT 
+-- On PROJ reduce production sterm -> FLOAT 
+-- On LEFT_PAREN reduce production sterm -> FLOAT 
+-- On LEFT_BRACE reduce production sterm -> FLOAT 
+-- On LABEL reduce production sterm -> FLOAT 
+-- On INT reduce production sterm -> FLOAT 
+-- On IN reduce production sterm -> FLOAT 
+-- On FUN reduce production sterm -> FLOAT 
+-- On FLOAT reduce production sterm -> FLOAT 
+-- On EXTEND reduce production sterm -> FLOAT 
+-- On EOF reduce production sterm -> FLOAT 
+-- On DEFAULT reduce production sterm -> FLOAT 
+
+State 20:
+sterm -> EXTEND . LABEL sterm sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On LABEL shift to state 21
+
+State 21:
+sterm -> EXTEND LABEL . sterm sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 4
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 27
+-- On record shift to state 26
+
+State 22:
+sterm -> DEFAULT . LABEL sterm sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On LABEL shift to state 23
+
+State 23:
+sterm -> DEFAULT LABEL . sterm sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 4
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 24
+-- On record shift to state 26
+
+State 24:
+sterm -> DEFAULT LABEL sterm . sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 4
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 25
+-- On record shift to state 26
+
+State 25:
+sterm -> DEFAULT LABEL sterm sterm . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On SS reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On SEMI_COLON reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On RIGHT_PAREN reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On RIGHT_BRACE reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On PROJ reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On LEFT_PAREN reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On LEFT_BRACE reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On LABEL reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On INT reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On IN reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On FUN reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On FLOAT reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On EXTEND reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On EOF reduce production sterm -> DEFAULT LABEL sterm sterm 
+-- On DEFAULT reduce production sterm -> DEFAULT LABEL sterm sterm 
+
+State 26:
+sterm -> record . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> record 
+-- On SS reduce production sterm -> record 
+-- On SEMI_COLON reduce production sterm -> record 
+-- On RIGHT_PAREN reduce production sterm -> record 
+-- On RIGHT_BRACE reduce production sterm -> record 
+-- On PROJ reduce production sterm -> record 
+-- On LEFT_PAREN reduce production sterm -> record 
+-- On LEFT_BRACE reduce production sterm -> record 
+-- On LABEL reduce production sterm -> record 
+-- On INT reduce production sterm -> record 
+-- On IN reduce production sterm -> record 
+-- On FUN reduce production sterm -> record 
+-- On FLOAT reduce production sterm -> record 
+-- On EXTEND reduce production sterm -> record 
+-- On EOF reduce production sterm -> record 
+-- On DEFAULT reduce production sterm -> record 
+
+State 27:
+sterm -> EXTEND LABEL sterm . sterm [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 4
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 28
+-- On record shift to state 26
+
+State 28:
+sterm -> EXTEND LABEL sterm sterm . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On SS reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On SEMI_COLON reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On RIGHT_PAREN reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On RIGHT_BRACE reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On PROJ reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On LEFT_PAREN reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On LEFT_BRACE reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On LABEL reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On INT reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On IN reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On FUN reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On FLOAT reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On EXTEND reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On EOF reduce production sterm -> EXTEND LABEL sterm sterm 
+-- On DEFAULT reduce production sterm -> EXTEND LABEL sterm sterm 
+
+State 29:
+aterm -> FUN LABEL ARROW term . [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On SS reduce production aterm -> FUN LABEL ARROW term 
+-- On SEMI_COLON reduce production aterm -> FUN LABEL ARROW term 
+-- On RIGHT_PAREN reduce production aterm -> FUN LABEL ARROW term 
+-- On RIGHT_BRACE reduce production aterm -> FUN LABEL ARROW term 
+-- On IN reduce production aterm -> FUN LABEL ARROW term 
+-- On EOF reduce production aterm -> FUN LABEL ARROW term 
+
+State 30:
+aterm -> sterm . aterm [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+aterm -> sterm . [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 31
+-- On SS reduce production aterm -> sterm 
+-- On SEMI_COLON reduce production aterm -> sterm 
+-- On RIGHT_PAREN reduce production aterm -> sterm 
+-- On RIGHT_BRACE reduce production aterm -> sterm 
+-- On IN reduce production aterm -> sterm 
+-- On EOF reduce production aterm -> sterm 
+
+State 31:
+aterm -> sterm aterm . [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On SS reduce production aterm -> sterm aterm 
+-- On SEMI_COLON reduce production aterm -> sterm aterm 
+-- On RIGHT_PAREN reduce production aterm -> sterm aterm 
+-- On RIGHT_BRACE reduce production aterm -> sterm aterm 
+-- On IN reduce production aterm -> sterm aterm 
+-- On EOF reduce production aterm -> sterm aterm 
+
+State 32:
+term -> aterm . [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On SS reduce production term -> aterm 
+-- On SEMI_COLON reduce production term -> aterm 
+-- On RIGHT_PAREN reduce production term -> aterm 
+-- On RIGHT_BRACE reduce production term -> aterm 
+-- On IN reduce production term -> aterm 
+-- On EOF reduce production term -> aterm 
+
+State 33:
+fields -> LABEL EQ term . SEMI_COLON fields [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On SEMI_COLON shift to state 34
+
+State 34:
+fields -> LABEL EQ term SEMI_COLON . fields [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING shift to state 1
+-- On RIGHT_BRACE shift to state 11
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 12
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 35
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On fields shift to state 39
+-- On aterm shift to state 32
+
+State 35:
+fields -> term . option(SEMI_COLON) RIGHT_BRACE [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On SEMI_COLON shift to state 36
+-- On option(SEMI_COLON) shift to state 37
+-- On RIGHT_BRACE reduce production option(SEMI_COLON) -> 
+
+State 36:
+option(SEMI_COLON) -> SEMI_COLON . [ RIGHT_BRACE ]
+-- On RIGHT_BRACE reduce production option(SEMI_COLON) -> SEMI_COLON 
+
+State 37:
+fields -> term option(SEMI_COLON) . RIGHT_BRACE [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On RIGHT_BRACE shift to state 38
+
+State 38:
+fields -> term option(SEMI_COLON) RIGHT_BRACE . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On SS reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On SEMI_COLON reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On RIGHT_PAREN reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On RIGHT_BRACE reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On PROJ reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On LEFT_PAREN reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On LEFT_BRACE reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On LABEL reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On INT reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On IN reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On FUN reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On FLOAT reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On EXTEND reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On EOF reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+-- On DEFAULT reduce production fields -> term option(SEMI_COLON) RIGHT_BRACE 
+
+State 39:
+fields -> LABEL EQ term SEMI_COLON fields . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On SS reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On SEMI_COLON reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On RIGHT_PAREN reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On RIGHT_BRACE reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On PROJ reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On LEFT_PAREN reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On LEFT_BRACE reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On LABEL reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On INT reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On IN reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On FUN reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On FLOAT reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On EXTEND reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On EOF reduce production fields -> LABEL EQ term SEMI_COLON fields 
+-- On DEFAULT reduce production fields -> LABEL EQ term SEMI_COLON fields 
+
+State 40:
+record -> LEFT_BRACE fields . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production record -> LEFT_BRACE fields 
+-- On SS reduce production record -> LEFT_BRACE fields 
+-- On SEMI_COLON reduce production record -> LEFT_BRACE fields 
+-- On RIGHT_PAREN reduce production record -> LEFT_BRACE fields 
+-- On RIGHT_BRACE reduce production record -> LEFT_BRACE fields 
+-- On PROJ reduce production record -> LEFT_BRACE fields 
+-- On LEFT_PAREN reduce production record -> LEFT_BRACE fields 
+-- On LEFT_BRACE reduce production record -> LEFT_BRACE fields 
+-- On LABEL reduce production record -> LEFT_BRACE fields 
+-- On INT reduce production record -> LEFT_BRACE fields 
+-- On IN reduce production record -> LEFT_BRACE fields 
+-- On FUN reduce production record -> LEFT_BRACE fields 
+-- On FLOAT reduce production record -> LEFT_BRACE fields 
+-- On EXTEND reduce production record -> LEFT_BRACE fields 
+-- On EOF reduce production record -> LEFT_BRACE fields 
+-- On DEFAULT reduce production record -> LEFT_BRACE fields 
+
+State 41:
+term -> LET LABEL EQ term . IN term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On IN shift to state 42
+
+State 42:
+term -> LET LABEL EQ term IN . term [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 43
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 32
+
+State 43:
+term -> LET LABEL EQ term IN term . [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On SS reduce production term -> LET LABEL EQ term IN term 
+-- On SEMI_COLON reduce production term -> LET LABEL EQ term IN term 
+-- On RIGHT_PAREN reduce production term -> LET LABEL EQ term IN term 
+-- On RIGHT_BRACE reduce production term -> LET LABEL EQ term IN term 
+-- On IN reduce production term -> LET LABEL EQ term IN term 
+-- On EOF reduce production term -> LET LABEL EQ term IN term 
+
+State 44:
+aterm -> LEFT_PAREN term . RIGHT_PAREN [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On RIGHT_PAREN shift to state 45
+
+State 45:
+aterm -> LEFT_PAREN term RIGHT_PAREN . [ SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE IN EOF ]
+-- On SS reduce production aterm -> LEFT_PAREN term RIGHT_PAREN 
+-- On SEMI_COLON reduce production aterm -> LEFT_PAREN term RIGHT_PAREN 
+-- On RIGHT_PAREN reduce production aterm -> LEFT_PAREN term RIGHT_PAREN 
+-- On RIGHT_BRACE reduce production aterm -> LEFT_PAREN term RIGHT_PAREN 
+-- On IN reduce production aterm -> LEFT_PAREN term RIGHT_PAREN 
+-- On EOF reduce production aterm -> LEFT_PAREN term RIGHT_PAREN 
+
+State 46:
+sterm -> LEFT_PAREN aterm . RIGHT_PAREN [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+term -> aterm . [ RIGHT_PAREN ]
+-- On RIGHT_PAREN shift to state 47
+-- On RIGHT_PAREN reduce production term -> aterm 
+** Conflict on RIGHT_PAREN
+
+State 47:
+sterm -> LEFT_PAREN aterm RIGHT_PAREN . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On SS reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On SEMI_COLON reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On RIGHT_PAREN reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On RIGHT_BRACE reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On PROJ reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On LEFT_PAREN reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On LEFT_BRACE reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On LABEL reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On INT reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On IN reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On FUN reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On FLOAT reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On EXTEND reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On EOF reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+-- On DEFAULT reduce production sterm -> LEFT_PAREN aterm RIGHT_PAREN 
+
+State 48:
+sterm -> LEFT_PAREN aterm . RIGHT_PAREN [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On RIGHT_PAREN shift to state 47
+
+State 49:
+sterm -> PROJ LABEL sterm . [ STRING SS SEMI_COLON RIGHT_PAREN RIGHT_BRACE PROJ LEFT_PAREN LEFT_BRACE LABEL INT IN FUN FLOAT EXTEND EOF DEFAULT ]
+-- On STRING reduce production sterm -> PROJ LABEL sterm 
+-- On SS reduce production sterm -> PROJ LABEL sterm 
+-- On SEMI_COLON reduce production sterm -> PROJ LABEL sterm 
+-- On RIGHT_PAREN reduce production sterm -> PROJ LABEL sterm 
+-- On RIGHT_BRACE reduce production sterm -> PROJ LABEL sterm 
+-- On PROJ reduce production sterm -> PROJ LABEL sterm 
+-- On LEFT_PAREN reduce production sterm -> PROJ LABEL sterm 
+-- On LEFT_BRACE reduce production sterm -> PROJ LABEL sterm 
+-- On LABEL reduce production sterm -> PROJ LABEL sterm 
+-- On INT reduce production sterm -> PROJ LABEL sterm 
+-- On IN reduce production sterm -> PROJ LABEL sterm 
+-- On FUN reduce production sterm -> PROJ LABEL sterm 
+-- On FLOAT reduce production sterm -> PROJ LABEL sterm 
+-- On EXTEND reduce production sterm -> PROJ LABEL sterm 
+-- On EOF reduce production sterm -> PROJ LABEL sterm 
+-- On DEFAULT reduce production sterm -> PROJ LABEL sterm 
+
+State 50:
+decl -> LET . LABEL EQ term SS decl [ # ]
+term -> LET . LABEL EQ term IN term [ EOF ]
+-- On LABEL shift to state 51
+
+State 51:
+decl -> LET LABEL . EQ term SS decl [ # ]
+term -> LET LABEL . EQ term IN term [ EOF ]
+-- On EQ shift to state 52
+
+State 52:
+decl -> LET LABEL EQ . term SS decl [ # ]
+term -> LET LABEL EQ . term IN term [ EOF ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 7
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On DEFAULT shift to state 22
+-- On term shift to state 53
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On aterm shift to state 32
+
+State 53:
+decl -> LET LABEL EQ term . SS decl [ # ]
+term -> LET LABEL EQ term . IN term [ EOF ]
+-- On SS shift to state 54
+-- On IN shift to state 42
+
+State 54:
+decl -> LET LABEL EQ term SS . decl [ # ]
+-- On STRING shift to state 1
+-- On PROJ shift to state 2
+-- On LET shift to state 50
+-- On LEFT_PAREN shift to state 6
+-- On LEFT_BRACE shift to state 10
+-- On LABEL shift to state 14
+-- On INT shift to state 15
+-- On FUN shift to state 16
+-- On FLOAT shift to state 19
+-- On EXTEND shift to state 20
+-- On EOF shift to state 55
+-- On DEFAULT shift to state 22
+-- On term shift to state 56
+-- On sterm shift to state 30
+-- On record shift to state 26
+-- On final_decl shift to state 58
+-- On decl shift to state 59
+-- On aterm shift to state 32
+
+State 55:
+final_decl -> EOF . [ # ]
+-- On # reduce production final_decl -> EOF 
+
+State 56:
+final_decl -> term . EOF [ # ]
+-- On EOF shift to state 57
+
+State 57:
+final_decl -> term EOF . [ # ]
+-- On # reduce production final_decl -> term EOF 
+
+State 58:
+decl -> final_decl . [ # ]
+-- On # reduce production decl -> final_decl 
+
+State 59:
+decl -> LET LABEL EQ term SS decl . [ # ]
+-- On # reduce production decl -> LET LABEL EQ term SS decl 
+
+State 60:
+file' -> file . [ # ]
+-- On # accept file
+
+State 61:
+file -> decl . [ # ]
+-- On # reduce production file -> decl 
+

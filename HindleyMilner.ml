@@ -18,21 +18,25 @@ type term =
   | Unit
   | Int of int
   | Float of float
-  | AddInt of term * term
-  | SubInt of term * term
   | String of string
   | Record of label * term * term
   | Proj of label * term
   | Extend of label * term * term
   | Default of label * term * term
-  | Function of ffi
+  | UnFunction of unffi
+  | BinFunction of binffi
 
 (* functions *)
-and ffi = {
-  	ftype  : ty;
-  	name   : string;
-  	arity  : int;
-  	eval   : term array -> term
+and unffi = {
+  	un_ftype  : ty;
+  	un_name   : string;
+  	un_eval   : term -> term
+  }
+
+and binffi = {
+  	bin_ftype  : ty;
+  	bin_name   : string;
+  	bin_eval   : term -> term
   }
 
 (** Types. *)
@@ -85,14 +89,13 @@ let rec string_of_term = function
   | Int n -> string_of_int n
   | Float x -> string_of_float x
   | Unit -> "()"
-  | AddInt (m, n) -> Printf.sprintf "%s + %s" (string_of_term m) (string_of_term n)
-  | SubInt (m, n) -> Printf.sprintf "%s - %s" (string_of_term m) (string_of_term n)
   | String s -> Printf.sprintf "\"%s\"" s
   | Record (l, t, u) -> Printf.sprintf "{%s = %s; %s}" l (string_of_term t) (string_of_term u)
   | Proj (l, t) -> Printf.sprintf "proj_%s %s" l (string_of_term t)
   | Extend (l, v, t) -> Printf.sprintf "extend %s with {%s = %s}" (string_of_term t) l (string_of_term v)
   | Default (l, v, t) -> Printf.sprintf "default %s with {%s = %s}" (string_of_term t) l (string_of_term v)
-  | Function f -> Printf.sprintf "%s" f.name
+  | UnFunction f -> Printf.sprintf "%s" f.un_name
+  | BinFunction f -> Printf.sprintf "%s" f.bin_name
 
 
 (** Instantiate a type. *)
@@ -130,6 +133,7 @@ let rec occurs x = function
 
 (** a is subtype of b, meaning that a can be used in all functions that can be used on b. *)
 let rec subtype a b =
+  (* Format.printf "subtype %s %s\n" (string_of_ty a) (string_of_ty b); *)
   match a, b with
   | EVar x, EVar y when x = y -> ()
   | EVar x, _ when is_link x -> subtype (unlink x) b
@@ -141,6 +145,7 @@ let rec subtype a b =
   | TUnit, TUnit -> ()
   | TInt, TInt -> ()
   | TFloat, TFloat -> ()
+  | TString, TString -> ()
   | TRecord (l1, a1, b1), TRecord (l2, a2, b2) when l1 = l2 ->
       (
       match a1, a2 with
@@ -151,7 +156,7 @@ let rec subtype a b =
       | Maybe a1, Maybe a2 -> subtype a1 a2; subtype b1 b2
       | No, No -> subtype b1 b2
       | No, Maybe a2 -> subtype b1 b2
-      | _ -> raise Type_error
+      | _ -> Format.printf "type error for subtyping %s %s\n" (string_of_ty a) (string_of_ty b); raise Type_error
       )
   | TRecord (l1, a1, b1), TRecord (l2, a2, b2) ->
       let c = fresh () in
@@ -163,7 +168,9 @@ let rec subtype a b =
       subtype b1 b2
   | b1, TRecord (l2, No, b2) -> (* b1 is not a record *)
       subtype b1 b2
-  | _ -> raise Type_error
+  | _ ->
+    Format.printf "type error for subtyping %s %s\n" (string_of_ty a) (string_of_ty b);
+    raise Type_error
 
 (** Generalize a type. *)
 let rec gen env = function
@@ -190,8 +197,7 @@ let rec infer env = function
     let a = infer env u in
     let b = fresh () in
     let c = infer env t in
-    print_endline ("applying " ^ (string_of_term t) ^ " to " ^ (string_of_term u));
-    subtype (Arr (a,b)) c;
+    subtype c (Arr (a,b));
     b
   | Let (x, t, u) ->
     let a = infer env t in
@@ -199,14 +205,6 @@ let rec infer env = function
   | Unit -> TUnit
   | Int n -> TInt
   | Float x -> TFloat
-  | AddInt (m, n) ->
-      subtype (infer env m) TInt;
-      subtype (infer env n) TInt;
-      TInt
-  | SubInt (m, n) ->
-      subtype (infer env m) TInt;
-      subtype (infer env n) TInt;
-      TInt
   | String s -> TString
   | Record (l, t, u) ->
     let a = infer env t in
@@ -232,5 +230,7 @@ let rec infer env = function
     let b = fresh () in
     subtype r (TRecord (l, Maybe a, b));
     TRecord (l, Yes a, b)
-  | Function f ->
-    f.ftype
+  | UnFunction f ->
+    f.un_ftype
+  | BinFunction f ->
+    f.bin_ftype

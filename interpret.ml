@@ -4,25 +4,33 @@ type decl = string * term
 
 let string_of_decl (x, term) = x ^ " = " ^ (string_of_term term)
 
+let add_builtin_un term =
+  List.fold_right (fun (f:unffi) (t:term) -> Let(f.un_name, UnFunction f, t)) !Functions.builtin_un term
+
+let add_builtin_bin term =
+  List.fold_right (fun (f:binffi) (t:term) -> Let(f.bin_name, BinFunction f, t)) !Functions.builtin_bin term
+
 let add_builtin term =
-  List.fold_right (fun (f:ffi) (t:term) -> Let(f.name, Function f, t)) !Functions.builtin term
+  let term = add_builtin_un term in
+  add_builtin_bin term
 
 (* TYPING *)
 let type_term t =
+  Format.printf "----- TYPING -----\n";
   let t = add_builtin t in
   try
     let ty =  infer [] t in
-    print_endline ((string_of_term t) ^ " : " ^ (string_of_ty ty))
-  with
-    |   Type_error ->
-        print_endline ("Error when trying to infer type of : " ^ (string_of_term t))
-
+    Format.printf "%s : %s\n\n" (string_of_term t) (string_of_ty ty)
+  with Type_error -> Format.printf "Error when trying to infer type of : \n%s\n\n" (string_of_term t)
 
 (* EVALUATION *)
-exception Evaluation_error
-
-let rec eval env = function
-    | Var x -> (try eval env (List.assoc x env) with Not_found -> raise Evaluation_error)
+let rec eval env t =
+    match t with
+    | Var x ->
+        (
+          try eval env (List.assoc x env)
+          with Not_found -> Var x
+        )
     | Abs (x, t) ->
         let t = eval env t in
         Abs (x, t)
@@ -31,7 +39,9 @@ let rec eval env = function
         (
           match eval env t with
           | Abs (x, t) -> eval ((x, u)::env) t
-          | t -> App (t, u) (* TO DO: add case for ffi *)
+          | UnFunction f -> f.un_eval u
+          | BinFunction f -> f.bin_eval u
+          | t -> App (t, u)
         )
     | Let (x, t, u) ->
         let v = eval env t in
@@ -39,22 +49,6 @@ let rec eval env = function
     | Unit -> Unit
     | Int n -> Int n
     | Float x -> Float x
-    | AddInt (m, n) ->
-        let m = eval env m in
-        let n = eval env n in
-        (
-            match m, n with
-            | Int m, Int n -> Int (m + n)
-            | m, n -> AddInt (m, n)
-        )
-    | SubInt (m, n) ->
-        let m = eval env m in
-        let n = eval env n in
-        (
-            match m, n with
-            | Int m, Int n -> Int (m + n)
-            | m, n -> SubInt (m, n)
-        )
     | String s -> String s
     | Record (l, t, u) ->
         let t = eval env t in
@@ -67,7 +61,7 @@ let rec eval env = function
               t
           | Record (l1, t, u) ->
               eval env (Proj (l, u))
-          | _ -> raise Evaluation_error
+          | _ -> Proj (l, t)
       )
     | Extend (l, v, t) ->
         Record (l, v, t)
@@ -79,19 +73,19 @@ let rec eval env = function
           | Record (l1, t, u) ->
               let u = eval env (Default (l, v, u)) in
               Record (l1, t, u)
+          | Var x ->
+              Default (l, v, Var x)
           | t ->
               Record (l, v, t)
       )
-    | Function f ->
-        Function f
-
+    | UnFunction f -> UnFunction f
+    | BinFunction f -> BinFunction f
 
 let eval_term t =
+  Format.printf "----- EVALUATION -----\n";
   let t = add_builtin t in
   try
     ignore (infer [] t);
     let v =  eval [] t in
-    print_endline ((string_of_term t) ^ " evaluates to " ^ (string_of_term v))
-  with
-    | Type_error -> print_endline ("Evaluation error: Cannot evaluate a term that is not well-typed.")
-    | Evaluation_error -> print_endline ("Evaluation error: error when trying to evaluate : " ^ (string_of_term t))
+    Format.printf "%s evaluates to %s \n\n" (string_of_term t) (string_of_term v)
+  with Type_error -> Format.printf "Evaluation error: Cannot evaluate a term that is not well-typed.\n\n"
